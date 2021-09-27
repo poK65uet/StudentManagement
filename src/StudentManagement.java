@@ -1,6 +1,8 @@
 public class StudentManagement {
-    private Student[] students = new Student[150];
-    private static int count = 0;
+    private Student[] students = new Student[100];
+    private String[] groups = new String[100];
+    private int ssize = 0;
+    private int gsize = 0;
 
     /**
      * Compare Group.
@@ -9,11 +11,7 @@ public class StudentManagement {
      * @return sameGroup
      */
     public static boolean sameGroup(Student s1, Student s2) {
-        if (s1.getGroup() == s2.getGroup()) {
-            return true;
-        } else {
-            return false;
-        }
+        return s1.getGroup().equals(s2.getGroup());
     }
 
     /**
@@ -21,8 +19,8 @@ public class StudentManagement {
      * @param newStudent Parameter.
      */
     public void addStudent(Student newStudent) {
-        students[count] = newStudent;
-        count += 1;
+        students[ssize] = newStudent;
+        ssize += 1;
     }
 
     /**
@@ -31,17 +29,28 @@ public class StudentManagement {
      */
     public String studentsByGroup() {
         String result = "";
-        boolean[] res = new boolean[150];
-        for (int i = 0; i < count; i++) {
+
+        for (int i = 0; i < ssize; i++) {
             Student s = students[i];
-            if (res[i] == false) {
-                result = result.concat(s.getGroup()).concat("\n");
-                for (int j = i; j < count; j++) {
-                    Student t = students[j];
-                    if (t.getGroup().equals(s.getGroup())) {
-                        res[j] = true;
-                        result = result.concat(t.getInfo()).concat("\n");
-                    }
+            boolean check = false;
+            for (int j = 0; j < gsize; j++) {
+                if (s.getGroup().equals(groups[j])) {
+                    check = true;
+                    break;
+                }
+            }
+            if (check == false) {
+                groups[gsize] = s.getGroup();
+                gsize += 1;
+            }
+        }
+
+        for (int i = 0; i < gsize; i++) {
+            result = result.concat(groups[i]).concat("\n");
+            for (int j = 0; j < ssize; j++) {
+                Student s = students[j];
+                if (s.getGroup().equals(groups[i])) {
+                    result = result.concat(s.getInfo()).concat("\n");
                 }
             }
         }
@@ -53,12 +62,12 @@ public class StudentManagement {
      * @param id id of student.
      */
     public void removeStudent(String id) {
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < ssize; i++) {
             if (students[i].getId().equals(id)) {
-                for (int j = i; j < count - 1; j++) {
+                for (int j = i; j < ssize - 1; j++) {
                     students[j] = students[j + 1];
                 }
-                count -= 1;
+                ssize -= 1;
                 break;
             }
         }
